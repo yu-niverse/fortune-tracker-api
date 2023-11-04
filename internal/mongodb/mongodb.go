@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
+var DB *mongo.Client
 var LedgerCollection *mongo.Collection
 var TransactionCollection *mongo.Collection
 
@@ -39,5 +40,14 @@ func Connect() error {
 	TransactionCollection = DB.Database("Fortune_Tracker").Collection("Transaction")
 
 	logger.Info("[MONGODB] Successfully connected to MongoDB!")
+	return nil
+}
+
+func Disconnect() error {
+	err := DB.Disconnect(context.TODO())
+	if err != nil {
+		return err
+	}
+	logger.Info("[MONGODB] Successfully disconnected from MongoDB!")
 	return nil
 }

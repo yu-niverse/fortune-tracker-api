@@ -11,14 +11,18 @@ import (
 	"Fortune_Tracker_API/pkg/logger"
 	"Fortune_Tracker_API/pkg/validator"
 	"io"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Main() {
 	// Init API
-	initAPI()
+	apiInit()
+	Quit := make(chan os.Signal, 1)
 
 	// Create gin router
 	r := gin.Default()
@@ -57,10 +61,36 @@ func Main() {
 		ledgerRoutes.PUT("/transaction/:utid", transaction.Update)
 	}
 
-	r.Run()
+	// Start API service
+	srv := &http.Server{
+		Addr:    config.Viper.GetString("API_PORT"),
+		Handler: r,
+	}
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		logger.Error("[API] " + err.Error())
+		os.Exit(1)
+	}
+
+	// Graceful shutdown
+	signal.Notify(Quit, syscall.SIGINT, syscall.SIGTERM)
+	<-Quit
+	logger.Info("[API] Shutting down server...")
+	if err := srv.Shutdown(nil); err != nil {
+		logger.Error("[API] Error shutting down API server: " + err.Error())
+		os.Exit(1)
+	}
+	if err := mariadb.Disconnect(); err != nil {
+		logger.Error("[MARIADB] Error closing DB: " + err.Error())
+		os.Exit(1)
+	}
+	if err := mongodb.Disconnect(); err != nil {
+		logger.Error("[MONGODB] Error closing DB: " + err.Error())
+		os.Exit(1)
+	}
+	logger.Info("[API] Server exited properly")
 }
 
-func initAPI() {
+func apiInit() {
 	config.LoadConfig() // Load config
 	auth.SetJWTKey()    // Set JWT key
 	logger.InitLogger() // Init logger

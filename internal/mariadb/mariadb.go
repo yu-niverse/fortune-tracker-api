@@ -36,3 +36,12 @@ func Connect() error {
 	logger.Info("[MARIADB] Successfully connected to MariaDB!")
 	return nil
 }
+
+func Disconnect() error {
+	err := DB.Close()
+	if err != nil {
+		return err
+	}
+	logger.Info("[MARIADB] Successfully disconnected from MariaDB!")
+	return nil
+}
