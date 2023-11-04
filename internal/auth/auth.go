@@ -2,8 +2,8 @@ package auth
 
 import (
 	"Fortune_Tracker_API/config"
+	"Fortune_Tracker_API/internal/response"
 	"Fortune_Tracker_API/pkg/logger"
-	"Fortune_Tracker_API/pkg/response"
 	"net/http"
 	"strings"
 	"time"

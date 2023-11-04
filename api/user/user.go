@@ -1,8 +1,8 @@
 package user
 
 import (
-	"Fortune_Tracker_API/internal/mariadb"
 	"Fortune_Tracker_API/pkg/logger"
+	"Fortune_Tracker_API/pkg/mariadb"
 	"errors"
 
 	"github.com/google/uuid"

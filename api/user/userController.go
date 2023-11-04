@@ -1,9 +1,9 @@
 package user
 
 import (
-	"Fortune_Tracker_API/pkg/auth"
+	"Fortune_Tracker_API/internal/auth"
+	"Fortune_Tracker_API/internal/response"
 	"Fortune_Tracker_API/pkg/logger"
-	"Fortune_Tracker_API/pkg/response"
 	"net/http"
 	"regexp"
 	"strings"

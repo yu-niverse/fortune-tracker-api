@@ -1,7 +1,7 @@
 package transaction
 
 import (
-	"Fortune_Tracker_API/pkg/response"
+	"Fortune_Tracker_API/internal/response"
 	"net/http"
 	"strings"
 	"time"

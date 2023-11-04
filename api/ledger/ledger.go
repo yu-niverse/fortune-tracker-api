@@ -1,8 +1,8 @@
 package ledger
 
 import (
-	"Fortune_Tracker_API/internal/mongodb"
 	"Fortune_Tracker_API/pkg/logger"
+	"Fortune_Tracker_API/pkg/mongodb"
 	"context"
 	"errors"
 	"time"

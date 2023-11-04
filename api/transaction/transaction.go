@@ -2,8 +2,8 @@ package transaction
 
 import (
 	"Fortune_Tracker_API/api/ledger"
-	"Fortune_Tracker_API/internal/mongodb"
 	"Fortune_Tracker_API/pkg/logger"
+	"Fortune_Tracker_API/pkg/mongodb"
 	"context"
 	"errors"
 	"time"
