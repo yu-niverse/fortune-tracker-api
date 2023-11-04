@@ -13,22 +13,22 @@ import (
 var Log *zap.Logger
 
 func InitLogger() {
-	// Configuration for the logger encoder (how to format the logs)
-	encoderConfig := zap.NewProductionEncoderConfig()
-	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder 	// change time format to ISO8601
-	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder	// change level format to CAPITAL
-	encoder := zapcore.NewConsoleEncoder(encoderConfig)
-
-	// Create logger file
+	// file logger
 	path := config.Viper.GetString("LOG_PATH")
 	file, _ := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	fileWriteSyncer := zapcore.AddSync(file)
-
-	// Create logger
-	// (low) Debug -> Info -> Warn -> Error -> Panic -> Fatal (high)
+	productionCfg := zap.NewProductionEncoderConfig()
+	productionCfg.EncodeTime = zapcore.ISO8601TimeEncoder
+	fileEncoder := zapcore.NewJSONEncoder(productionCfg)
+	// console logger
+	stdout := zapcore.AddSync(os.Stdout)
+	developmentCfg := zap.NewDevelopmentEncoderConfig()
+	developmentCfg.EncodeLevel = zapcore.CapitalColorLevelEncoder
+	consoleEncoder := zapcore.NewConsoleEncoder(developmentCfg)
+	// set core
 	core := zapcore.NewTee(
-		zapcore.NewCore(encoder, zapcore.AddSync(os.Stdout), zapcore.ErrorLevel), // you can change the output level here
-		zapcore.NewCore(encoder, fileWriteSyncer, zapcore.DebugLevel),
+		zapcore.NewCore(consoleEncoder, stdout, zapcore.DebugLevel),
+		zapcore.NewCore(fileEncoder, fileWriteSyncer, zapcore.DebugLevel),
 	)
 	Log = zap.New(core)
 }

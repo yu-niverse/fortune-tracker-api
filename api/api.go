@@ -63,7 +63,7 @@ func Main() {
 
 	// Start API service
 	srv := &http.Server{
-		Addr:    config.Viper.GetString("API_PORT"),
+		Addr:    ":" + config.Viper.GetString("API_PORT"),
 		Handler: r,
 	}
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
